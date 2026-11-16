@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Download Aculeus</title>
+    <meta
+      name="description"
+      content="Download Aculeus for Windows or Mac. It keeps itself up to date."
+    />
+    <link rel="icon" href="icon.png" />
+    <style>
+      :root {
+        --page: #f7f6f2;
+        --ink: #17163a;
+        --soft: #5c5b78;
+        --line: #dcdae6;
+        --brand: #2a2a8f;
+        --accent: #ff7043;
+        --card: #ffffff;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page: #111024;
+          --ink: #f1f0fa;
+          --soft: #a9a8c4;
+          --line: #2d2c4d;
+          --brand: #8f90ff;
+          --card: #1a1934;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 16px;
+        background: var(--page);
+        color: var(--ink);
+        font: 17px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      main {
+        width: 100%;
+        max-width: 520px;
+        text-align: center;
+      }
+      img {
+        width: 88px;
+        height: 88px;
+      }
+      h1 {
+        margin: 20px 0 8px;
+        font-size: 34px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        text-wrap: balance;
+      }
+      p {
+        margin: 0;
+        color: var(--soft);
+      }
+      .primary {
+        display: block;
+        margin: 28px 0 10px;
+        padding: 16px 20px;
+        border-radius: 14px;
+        background: var(--accent);
+        color: #1b1206;
+        font-weight: 650;
+        font-size: 18px;
+        text-decoration: none;
+      }
+      .primary:hover {
+        filter: brightness(1.06);
+      }
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--brand);
+        outline-offset: 3px;
+      }
+      .others {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        justify-content: center;
+        font-size: 15px;
+      }
+      .others a,
+      details a {
+        color: var(--brand);
+      }
+      .note {
+        margin-top: 10px;
+        font-size: 15px;
+      }
+      details {
+        margin-top: 28px;
+        padding: 14px 18px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: var(--card);
+        text-align: left;
+        font-size: 15px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      details p {
+        margin-top: 10px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="icon.png" alt="" />
+      <h1>Download Aculeus</h1>
+      <p>Install it once. It keeps itself up to date.</p>
+
+      <a class="primary" id="main" href="#">Download</a>
+      <p class="others" id="others"></p>
+      <p class="note" id="note"></p>
+
+      <details id="first">
+        <summary>The first time you open it</summary>
+        <p data-for="windows">
+          <strong>Windows:</strong> open the file you downloaded. If Windows
+          shows a blue warning, choose <em>More info</em>, then
+          <em>Run anyway</em>.
+        </p>
+        <p data-for="mac">
+          <strong>Mac:</strong> open the zip, move Aculeus to Applications and
+          open it. If the Mac stops it, go to System Settings, Privacy &amp;
+          Security, and choose <em>Open Anyway</em>.
+        </p>
+        <p data-for="mac">
+          Not sure which Mac you have? Apple menu, About This Mac. "Chip: Apple"
+          means Apple silicon; "Processor: Intel" means Intel.
+        </p>
+      </details>
+    </main>
+    <script>
+      const base =
+        "https://github.com/Aculeus-inc/aculeus-platform-releases/releases/latest/download/";
+      const files = {
+        windows: ["Windows", "Aculeus-windows-x64.exe"],
+        apple: ["Mac with Apple silicon", "Aculeus-mac-apple-silicon.zip"],
+        intel: ["Mac with an Intel chip", "Aculeus-mac-intel.zip"],
+      };
+      const agent = navigator.userAgent;
+      const phone = /Android|iPhone|iPad|iPod/.test(agent);
+      const mac = !phone && /Macintosh|Mac OS X/.test(agent);
+      // A browser cannot tell the two kinds of Mac apart, so a Mac gets the
+      // Apple silicon file first (every Mac sold since 2020) and Intel beside it.
+      const pick = mac ? "apple" : "windows";
+      const main = document.getElementById("main");
+      main.href = base + files[pick][1];
+      main.textContent = "Download for " + files[pick][0];
+      const others = document.getElementById("others");
+      for (const [key, [label, file]] of Object.entries(files)) {
+        if (key === pick) continue;
+        const link = document.createElement("a");
+        link.href = base + file;
+        link.textContent = label;
+        others.append(link);
+      }
+      const note = document.getElementById("note");
+      if (phone)
+        note.textContent =
+          "Aculeus runs on a Windows or Mac computer. Open this page there.";
+      for (const tip of document.querySelectorAll("[data-for]"))
+        if (!phone && (tip.dataset.for === "mac") !== mac) tip.hidden = true;
+      // Say which version the buttons give, or that there is none yet.
+      fetch(
+        "https://api.github.com/repos/Aculeus-inc/aculeus-platform-releases/releases/latest",
+      )
+        .then((answer) => {
+          if (answer.status === 404) {
+            main.removeAttribute("href");
+            main.style.opacity = "0.5";
+            others.hidden = true;
+            note.textContent =
+              "The first release is not out yet. Check back soon.";
+            return null;
+          }
+          return answer.ok ? answer.json() : null;
+        })
+        .then((release) => {
+          if (release?.tag_name && !phone)
+            note.textContent = "Version " + release.tag_name.replace(/^v/, "");
+        })
+        .catch(() => {});
+    </script>
+  </body>
+</html>
