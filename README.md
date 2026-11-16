@@ -1,6 +1,6 @@
 # Aculeus downloads
 
-Aculeus is one place where a client's staff, builders and agents work together. Download it from **https://aculeus-inc.github.io/aculeus-platform-releases/**, which offers the file for your computer. Or pick it here:
+Aculeus is one place where a client's staff, builders and agents work together. Download it from **https://download.aculeus.ai**, which offers the file for your computer. Or pick it here:
 
 - **Windows**: [Aculeus-windows-x64.exe](https://github.com/Aculeus-inc/aculeus-platform-releases/releases/latest/download/Aculeus-windows-x64.exe)
 - **Mac with Apple silicon** (M1 and later): [Aculeus-mac-apple-silicon.zip](https://github.com/Aculeus-inc/aculeus-platform-releases/releases/latest/download/Aculeus-mac-apple-silicon.zip)
